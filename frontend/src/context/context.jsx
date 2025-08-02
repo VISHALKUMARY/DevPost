@@ -1,4 +1,4 @@
-const base_url = "http://localhost:8000/api/";
+const base_url = "https://mernbackend-n3sq.onrender.com";
 
 
 

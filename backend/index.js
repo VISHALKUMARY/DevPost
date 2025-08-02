@@ -14,13 +14,19 @@ const app = express();
 // Connect to MongoDB
 connectDB();
 
-// Middleware
-app.use(express.json());
-app.use(cookieParser());
+// CORS setup
 app.use(cors({
   origin: "https://devpost.onrender.com",
   credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 }));
+
+app.options("*", cors()); // Handle preflight requests
+
+// Middleware
+app.use(express.json());
+app.use(cookieParser());
 
 // Routes
 app.use("/api/users", userRoutes);

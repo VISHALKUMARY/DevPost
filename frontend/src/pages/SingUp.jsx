@@ -23,28 +23,44 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${base_url}users/signup`, formData);
-      toast.success("Signup successful! Please login.");
-      navigate("/login");
+      const res = await axios.post(`${base_url}users/signup`, formData, {
+        withCredentials: true,
+      });
+
+      const { token, user } = res.data;
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem(
+        "avatarUrl",
+        user.avatar ||
+          `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=6b21a8&color=fff`
+      );
+
+      toast.success("Signup successful!");
+      window.dispatchEvent(new Event("login"));
+      navigate("/");
     } catch (err) {
-      console.log(err);
+      toast.error(
+        err?.response?.data?.message || "Signup failed. Try again later."
+      );
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-indigo-200 via-purple-100 to-pink-100 px-4 py-10">
-      <h1 className="text-5xl font-extrabold text-purple-700 mb-2 animate-fade-in-down drop-shadow">
+    <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-indigo-200 via-purple-100 to-pink-100 px-4 py-12">
+      <h1 className="text-3xl sm:text-4xl font-extrabold text-purple-700 mb-2 drop-shadow">
         Join DevPost 🚀
       </h1>
-      <p className="text-base sm:text-lg text-gray-600 italic mb-8 text-center max-w-lg animate-fade-in-up">
+      <p className="text-center text-gray-600 text-sm sm:text-base italic mb-8 max-w-xs sm:max-w-md">
         “Empower your voice, inspire the world. Create. Share. Connect.”
       </p>
 
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-10 rounded-3xl shadow-2xl w-full max-w-lg border border-purple-200 animate-fade-in space-y-6"
+        className="bg-white w-full max-w-md p-8 sm:p-10 rounded-3xl shadow-xl border border-purple-200 space-y-6"
       >
-        <h2 className="text-3xl font-bold text-center text-purple-700">
+        <h2 className="text-xl sm:text-2xl font-bold text-center text-purple-700">
           Create Your Account
         </h2>
 
@@ -56,7 +72,7 @@ const Signup = () => {
             onChange={handleChange}
             placeholder="Full Name"
             required
-            className="w-full px-5 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition"
+            className="w-full px-4 py-3 border border-gray-300  text-black rounded-xl shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-purple-400"
           />
           <input
             type="email"
@@ -65,8 +81,9 @@ const Signup = () => {
             onChange={handleChange}
             placeholder="Email Address"
             required
-            className="w-full px-5 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition"
+            className="w-full px-4 py-3 border border-gray-300 text-black rounded-xl shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-purple-400"
           />
+
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
@@ -75,17 +92,17 @@ const Signup = () => {
               onChange={handleChange}
               placeholder="Password"
               required
-              className="w-full px-5 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition pr-12"
+              className="w-full px-4 py-3 border border-gray-300 text-black rounded-xl pr-12 shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-purple-400"
             />
             <span
               onClick={() => setShowPassword((prev) => !prev)}
               className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500 hover:text-gray-700"
             >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </span>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 items-center">
+          <div className="flex gap-4 items-center justify-center text-sm text-gray-700 font-medium">
             <label className="flex items-center gap-2">
               <input
                 type="radio"
@@ -95,7 +112,7 @@ const Signup = () => {
                 onChange={handleChange}
                 className="accent-purple-600"
               />
-              <span className="text-gray-700 font-medium">User</span>
+              User
             </label>
             <label className="flex items-center gap-2">
               <input
@@ -106,23 +123,23 @@ const Signup = () => {
                 onChange={handleChange}
                 className="accent-purple-600"
               />
-              <span className="text-gray-700 font-medium">Admin</span>
+              Admin
             </label>
           </div>
         </div>
 
         <button
           type="submit"
-          className="w-full mt-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold py-3 rounded-xl shadow-lg transition-transform hover:scale-105"
+          className="w-full py-3 rounded-xl font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 transition hover:scale-[1.02]"
         >
           Sign Up
         </button>
 
-        <p className="text-sm mt-4 text-center text-gray-600">
+        <p className="text-center text-sm text-gray-600">
           Already have an account?{" "}
           <span
-            className="text-blue-600 font-semibold cursor-pointer hover:underline"
             onClick={() => navigate("/login")}
+            className="text-blue-600 font-semibold cursor-pointer hover:underline"
           >
             Login
           </span>

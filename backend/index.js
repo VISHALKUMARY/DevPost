@@ -11,20 +11,18 @@ dotenv.config();
 
 const app = express();
 
-// Connect to DB
+// Connect to MongoDB
 connectDB();
 
-// ✅ CORS fix for Render (temporary open config — refine later)
+// CORS setup
 app.use(cors({
-  origin: true, // ✅ Reflects request origin
+  origin: "https://devpost.onrender.com",
   credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 }));
 
-// ✅ Also handle OPTIONS preflight for all routes
-app.options("*", cors({
-  origin: true,
-  credentials: true,
-}));
+app.options("*", cors()); // Handle preflight requests
 
 // Middleware
 app.use(express.json());
@@ -34,7 +32,7 @@ app.use(cookieParser());
 app.use("/api/users", userRoutes);
 app.use("/api/post", postRoutes);
 
-// Health check route
+// Default route
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
@@ -42,5 +40,5 @@ app.get("/", (req, res) => {
 // Start server
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
 });

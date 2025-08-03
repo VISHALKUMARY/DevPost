@@ -15,19 +15,15 @@ const app = express();
 connectDB();
 
 // CORS setup
-app.use(cors({
+const corsOptions = {
   origin: "https://devpost.onrender.com",
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-}));
+};
 
-app.options("*", cors({
-  origin: "https://devpost.onrender.com",
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-}));
+app.use(cors(corsOptions));
+
 
 
 // Middleware

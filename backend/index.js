@@ -16,7 +16,7 @@ connectDB();
 
 // ✅ CORS setup
 const corsOptions = {
-  origin: "https://devpost.onrender.com",
+  origin: true,
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],

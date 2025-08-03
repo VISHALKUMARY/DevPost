@@ -14,7 +14,7 @@ const app = express();
 // Connect to MongoDB
 connectDB();
 
-// CORS setup
+// ✅ CORS setup
 const corsOptions = {
   origin: "https://devpost.onrender.com",
   credentials: true,
@@ -24,7 +24,8 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-
+// ✅ Handle preflight CORS for all routes
+app.options("*", cors(corsOptions));
 
 // Middleware
 app.use(express.json());
@@ -42,5 +43,5 @@ app.get("/", (req, res) => {
 // Start server
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
+  console.log(` Server running at http://localhost:${PORT}`);
 });
